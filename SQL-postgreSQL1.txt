@@ -21,3 +21,16 @@ alter table Sales
 /*drop column Region;*/
 
 add column Region varchar;
+
+copy sales (Region,Country,"Item Type","Sales channel","Order Priority",	"Order Date",	"Order ID",	"Ship Date",	
+	 "Units Sold",	"Unit Price",	"Unit Cost",	"Total Revenue",	"Total Cost",	
+	 "Total Profit")
+from 'D:\Program Files\PostgreSQL\100 Sales Records.csv'
+delimiter ','
+CSV Header;
+
+Select * from sales;
+
+Select * 
+from sales
+where region = 'Europe';
