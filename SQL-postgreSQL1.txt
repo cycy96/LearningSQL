@@ -1,10 +1,13 @@
+/*Create a table named Sales*/
 CREATE table Sales(
 Region varchar,
 Country varchar,
 "Item Type" varchar
 );
 
+/*Add column into 'Sales' table*/
 Alter table Sales
+add column Region varchar,
 add column "Sales channel" varchar,
 add column "Order Priority" varchar,
 add column "Order Date" varchar,
@@ -17,11 +20,8 @@ add column "Total Revenue" decimal,
 add column "Total Cost" decimal,
 add column "Total Profit" decimal;
 
-alter table Sales
-/*drop column Region;*/
-
-add column Region varchar;
-
+/*Alternative method*/
+/*Import a CSV file into a table using COPY statement*/
 copy sales (Region,Country,"Item Type","Sales channel","Order Priority",	"Order Date",	"Order ID",	"Ship Date",	
 	 "Units Sold",	"Unit Price",	"Unit Cost",	"Total Revenue",	"Total Cost",	
 	 "Total Profit")
@@ -29,8 +29,66 @@ from 'D:\Program Files\PostgreSQL\100 Sales Records.csv'
 delimiter ','
 CSV Header;
 
+
+/*Select statement or filter records */
 Select * from sales;
 
 Select * 
 from sales
 where region = 'Europe';
+
+/*Extract only those records from year 2015*/
+Select * 
+from sales
+where Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))='2015';
+
+/*Extract only those records from year 2016-2017*/
+Select * 
+from sales
+where 
+Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))='2015'
+or 
+Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))='2016'
+;
+
+/*Extract only those records from year 2016-2017 at specified region (Europe)*/
+Select * 
+from sales
+where 
+(
+Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))= 
+(select max (Extract (year from to_date("Ship Date", 'MM/DD/YYYY')))from sales)
+or 
+Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))=
+(select max (Extract (year from to_date("Ship Date", 'MM/DD/YYYY')))-1 from sales)
+)
+and 
+Region = 'Europe';
+
+/*Extract only those records from year 2016-2017 at specified country (name contain words "urope")*/
+Select * 
+from sales
+where 
+(
+Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))= 
+(select max (Extract (year from to_date("Ship Date", 'MM/DD/YYYY')))from sales)
+or 
+Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))=
+(select max (Extract (year from to_date("Ship Date", 'MM/DD/YYYY')))-1 from sales)
+)
+and 
+region like '%urope';
+
+/*Extract only those records from year 2016-2017 at specified country (name with spaces in between textfield)*/
+Select * 
+from sales
+where 
+(
+Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))= 
+(select max (Extract (year from to_date("Ship Date", 'MM/DD/YYYY')))from sales)
+or 
+Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))=
+(select max (Extract (year from to_date("Ship Date", 'MM/DD/YYYY')))-1 from sales)
+)
+and 
+country like '% %';
