@@ -92,3 +92,20 @@ Extract (year from to_date("Ship Date", 'MM/DD/YYYY'))=
 )
 and 
 country like '% %';
+
+/*Extract the total revenue in different countries in desc order*/
+Select sum("Total Revenue"), Country
+from sales
+Group by Country
+Order by sum("Total Revenue") desc;
+
+/*Extract the total revenue by a specific region of countries in desc order*/
+Select sum("Total Revenue"), Country
+from sales
+where region = 'Asia'
+Group by Country
+Order by sum("Total Revenue") desc;
+
+/*Extract the specific region (unique records) */
+Select distinct region 
+from sales;
